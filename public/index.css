@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #fbfbfb;
+  }
+  
+.container {
+  background-color: #f3f3f3 !important;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#logo {
+  font-family: 'Satisfy', cursive;
+  width: 100%;
+  text-align: center;
+  font-size: 24pt;
+}
+
+
+.round {
+  border-radius: 50%;
+}
+
+.wh-30 {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+}
+
+.nounderline {
+  text-decoration: none !important;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.bold:hover {
+  color: #111111 !important;
+}
+
+.post-image {
+  width: 100%;
+  object-fit: contain;
+}
+
+.like-hover:hover {
+  color: #17a2b8 !important;
+}
+.dislike-hover:hover {
+  color: #d9534f !important;
+}
+.comment-hover:hover {
+  color: #17a2b8 !important;
+}
+
+.bookmark-hover:hover {
+  color: #20c997 !important;
+}
+
+
+.far {
+  cursor: pointer;
+}
