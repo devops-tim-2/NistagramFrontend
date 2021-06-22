@@ -4,6 +4,8 @@ import userService from '../Services/userService';
 import { useHistory } from "react-router-dom";
 import toast from "../Shared/Toast";
 
+import {Link} from 'react-router-dom';
+
 export default function Login() {
   let history = useHistory()
   const [username, setUsername] = useState("");
@@ -24,7 +26,7 @@ export default function Login() {
   }
 
   return (
-    <div className="Login col-lg-4 col-md-6 col-sm-12 offset-lg-4 offset-md-3 bg-white px-5">
+    <div className="Login col-lg-4 col-md-6 col-sm-12 offset-lg-4 offset-md-3 px-5 py-3">
       <form onSubmit={handleSubmit}>
         <FormGroup controlId="username" bssize="large" className="my-4">
           <label>Username</label>
@@ -43,9 +45,13 @@ export default function Login() {
             type="password"
           />
         </FormGroup>
-        <Button className="my-5 w-100" block bssize="large" disabled={!validateForm()} type="submit">
+        <Button className="my-2 w-100" block bssize="large" disabled={!validateForm()} type="submit">
           Login
         </Button>
+
+        <br></br>
+        <br></br>
+        <Link to="/register" className="my-5">Create account instead</Link>
       </form>
     </div>
   );
