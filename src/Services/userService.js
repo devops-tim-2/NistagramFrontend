@@ -33,6 +33,10 @@ let userService = {
         localStorage.removeItem('expires');
         this.onChange(0);
     },
+    register: function (user_object) {
+        let url = `${api}user/api/register`;
+        return axios.post(url, user_object);
+    },
     onChange: function (v) {}
 };
 
