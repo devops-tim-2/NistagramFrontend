@@ -1,0 +1,17 @@
+import {api, bearer} from '../Environment/environment';
+import axios from 'axios';
+
+let postService = {
+    create: function (post) {
+        let url = `${api}post/api`;
+        return axios.post(url, post, bearer());
+
+    },
+    get_all: function () {
+        let url = `${api}post/api`;
+        return axios.get(url, bearer());
+
+    },
+};
+
+export default postService;
