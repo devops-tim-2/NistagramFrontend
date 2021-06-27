@@ -13,25 +13,65 @@ class Profile extends Component {
         this.state = {
             user: undefined,
             posts: undefined,
+            follow_state: undefined,
+            self_profile: false,
         };
     }
 
     async componentDidMount() {
         const { match: { params } } = this.props;
         let user_id = params.user_id
+
+        const self_profile = JSON.parse(localStorage.getItem('identity')).id == user_id
+        const logged_in = !(!localStorage.getItem('identity'))
         const user = (await userService.get(user_id)).data
+        let follow_state = {state: 'DNE'}
+
+        try {
+            follow_state = (await userService.get_follow(user_id)).data
+        } catch (error) { }
+
         postService.get_users_posts(user.id).then(posts => {
             this.setState({
                 user,
-                posts: posts.data
+                logged_in,
+                posts: posts.data, 
+                follow_state,
+                self_profile
             });
         }).catch(err => {
+            debugger;
             this.setState({
                 user,
-                posts: null
+                posts: err.response.status==404?[]:null, 
+                logged_in,
+                follow_state,
+                self_profile
             });
 
         })
+    }
+
+    async follow() {
+        userService.follow(this.state.user.id).then(async resp => {
+            let follow_state = {state: 'DNE'}
+
+            try {
+                follow_state = (await userService.get_follow(this.state.user.id)).data
+            } catch (error) { }
+
+            
+            this.setState({follow_state})
+
+        }).catch(async err => {
+            let follow_state = {state: 'DNE'}
+
+            try {
+                follow_state = (await userService.get_follow(this.state.user.id)).data
+            } catch (error) { }
+
+            this.setState({follow_state})
+        });
     }
 
 
@@ -47,17 +87,40 @@ class Profile extends Component {
                             <div className="w-200">
                                 <img src={user.profile_image_link} class="profile-pic round mb-4 border"></img>
 
-                                {/* <div className="col-10 offset-1 btn btn-primary btnh my-1"> Follow </div>
-                                <div className="col-10 offset-1 btn btn-danger btnh my-1"> Block </div> */}
+                                {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "ACCEPTED" && (
+                                    <div className="col-10 offset-1">
+                                        <div className="col-12 btn btn-warning btnh my-1"> Mute </div>
+                                        <div className="col-12 btn btn-danger btnh my-1"> Unfollow </div>
+                                    </div>
+                                )}
 
-                                {/* <div className="col-10 offset-1 btn btn-warning btnh my-1"> Mute </div>
-                                <div className="col-10 offset-1 btn btn-danger btnh my-1"> Unfollow </div> */}
+                                {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "PENDING" && (
+                                    
+                                    <div className="col-10 offset-1">
+                                        <div className="col-12 btn btn-warning btnh my-1 disabled"> Follow request sent </div>
+                                        <div className="col-12 btn btn-danger btnh my-1"> Block </div>
+                                    </div>
+                                )}
+
+                                {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "DNE" && (
+                                    <div className="col-10 offset-1">
+                                        <div className="col-12 btn btn-primary btnh my-1" onClick={() => this.follow()}> Follow </div>
+                                        <div className="col-12 btn btn-danger btnh my-1"> Block </div>
+                                    </div>
+                                    
+                                )}
+
+                                {this.state.logged_in && this.state.self_profile && (
+                                    <div className="col-10 offset-1">
+                                        <div className="col-12 btn btn-success btnh my-1"> Add post </div>
+                                        <div className="col-12 btn btn-primary btnh my-1"> Follow requests </div>
+                                        <div className="col-12 btn btn-primary btnh my-1"> Edit profile </div>
+                                        <div className="col-12 btn btn-danger btnh my-1"> Logout </div>
+                                    </div>
+                                )}
 
 
-                                {/* <div className="col-10 offset-1 btn btn-success btnh my-1"> Add post </div>
-                                <div className="col-10 offset-1 btn btn-primary btnh my-1"> Follow requests </div>
-                                <div className="col-10 offset-1 btn btn-primary btnh my-1"> Edit profile </div>
-                                <div className="col-10 offset-1 btn btn-danger btnh my-1"> Logout </div> */}
+
                             </div>
                             <div className="w-100-200 text-left">
                                 <h3 className="mb-3">{user.username}</h3>
@@ -87,6 +150,9 @@ class Profile extends Component {
 
                     { posts === null && (
                         <p className="text-center">User profile is private</p>
+                    ) }
+                    { posts && posts.length == 0 && (
+                        <p className="text-center">User profile doesn't have any posts yet.</p>
                     ) }
                 </div>
 

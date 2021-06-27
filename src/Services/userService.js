@@ -7,6 +7,18 @@ let userService = {
         let url = `${api}user/api/${id}`;
         return axios.get(url, bearer());
     },
+    get_follow: function(id) {
+        let url = `${api}user/api/concretefollow/${id}`;
+        return axios.get(url, bearer());
+    },
+    get_follow_requests: function() {
+        let url = `${api}user/api/follow`;
+        return axios.get(url, bearer());
+    },
+    follow: function(id) {
+        let url = `${api}user/api/follow`;
+        return axios.post(url, {dst: id, mute: false}, bearer());
+    },
     login: async function (username, password) {
         let url = `${api}user/api/login`;
         try {
