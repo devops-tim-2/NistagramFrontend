@@ -12,6 +12,10 @@ let postService = {
         return axios.get(url, bearer());
 
     },
+    get_users_posts: function (profile_id) {
+        let url = `${api}post/api/profile/${profile_id}`;
+        return axios.get(url, bearer());
+    }
 };
 
 export default postService;

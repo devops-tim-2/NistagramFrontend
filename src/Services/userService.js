@@ -3,6 +3,10 @@ import axios from 'axios';
 import jwt from 'jwt-decode';
 
 let userService = {
+    get: function(id) {
+        let url = `${api}user/api/${id}`;
+        return axios.get(url, bearer());
+    },
     login: async function (username, password) {
         let url = `${api}user/api/login`;
         try {
