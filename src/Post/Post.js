@@ -37,11 +37,11 @@ class Post extends Component {
     return (
         <div className="col-12 border border-light bg-white pb-4">
             <div className="col-12 px-4 py-3">
-                <img className="round wh-30 mx-2" src={post.user_profile_pic}></img>
-                <Link class="mx-2 text-dark nounderline bold" to="/">{post.username}</Link>
+                {/* <img className="round wh-30 mx-2" src={post.user_profile_pic}></img>
+                <Link class="mx-2 text-dark nounderline bold" to="/">{post.username}</Link> */}
             </div>
             <div className="col-12">
-                <img className="post-image" src={post.image_link}></img>
+                <img className="post-image" src={post.image_url}></img>
             </div>
             <div className="col-12 px-4 py-3 d-flex justify-content-between border-bottom border-light">
                 <div>
@@ -53,8 +53,8 @@ class Post extends Component {
                 </div>
             </div>
             <div className="col-12 px-4 py-1">
-                <div>{this.commas(post.likes)} likes</div>
-                <div>{this.commas(post.dislikes)} dislikes</div>
+                {/* <div>{this.commas(post.likes)} likes</div>
+                <div>{this.commas(post.dislikes)} dislikes</div> */}
             </div>
             <div className="col-12 px-4 mb-3">
                 <Link class="text-dark nounderline bold" to="/">{post.username}</Link>
