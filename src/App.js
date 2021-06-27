@@ -5,6 +5,7 @@ import Newsfeed from './Newsfeed/Newsfeed'
 import Register from './Register/Register'
 import Login from './Login/Login'
 import AddPost from './Post/AddPost';
+import PostPage from './Post/PostPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,6 +20,7 @@ class App extends Component {
         <Route exact path='/login' component={Login}/>
         <Route exact path='/register' component={Register}/>
         <Route exact path='/post' component={AddPost}/>
+        <Route exact path='/post/:post_id' component={PostPage}/>
         <ToastContainer position="bottom-center" autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
         
       </div>

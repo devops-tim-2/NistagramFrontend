@@ -1,7 +1,7 @@
 import React, {Component, useState }  from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-
+import postService from '../Services/postService'
 
 class Post extends Component {
   constructor(props) {
@@ -13,11 +13,11 @@ class Post extends Component {
   }
 
   async componentDidMount() {
-    // const { match: { params } } = this.props;
-    // post_id = params.post_id
+    let response = await postService.get_by_id(this.props.post_id);
+    let post = response.data
 
     this.setState({
-      post: this.props.post,
+      post
     });
   }
 
@@ -33,12 +33,13 @@ class Post extends Component {
 
   render() {
     const { post } = this.state;
-    if (post === null) return <p>Loading post ...</p>;
+    if (post === null) return <p>Loading post...</p>;
     return (
         <div className="col-12 border border-light bg-white pb-4">
             <div className="col-12 px-4 py-3">
                 {/* <img className="round wh-30 mx-2" src={post.user_profile_pic}></img>
                 <Link class="mx-2 text-dark nounderline bold" to="/">{post.username}</Link> */}
+                <p>{post.id}</p>
             </div>
             <div className="col-12">
                 <img className="post-image" src={post.image_url}></img>

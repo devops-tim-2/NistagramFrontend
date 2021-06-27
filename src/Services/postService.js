@@ -12,6 +12,11 @@ let postService = {
         return axios.get(url, bearer());
 
     },
+    get_by_id: function (id) {
+        let url = `${api}post/api/${id}`;
+        return axios.get(url, bearer());
+
+    },
 };
 
 export default postService;
