@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom'
 
 import { Link } from 'react-router-dom';
 import Post from '../Post/Post'
+import postService from '../Services/postService';
 
 class Newsfeed extends Component {
     constructor(props) {
@@ -16,11 +17,10 @@ class Newsfeed extends Component {
     }
 
     async componentDidMount() {
-        // const { match: { params } } = this.props;
-        // post_id = params.post_id
+        const posts = await postService.get_all()
 
         this.setState({
-            posts: dummy_posts,
+            posts: posts.data,
         });
     }
 
