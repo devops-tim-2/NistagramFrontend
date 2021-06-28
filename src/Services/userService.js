@@ -19,6 +19,10 @@ let userService = {
         let url = `${api}user/api/follow`;
         return axios.post(url, {dst: id, mute: false}, bearer());
     },
+    block: function(id) {
+        let url = `${api}user/api/block`;
+        return axios.post(url, {dst: id}, bearer());
+    },
     login: async function (username, password) {
         let url = `${api}user/api/login`;
         try {

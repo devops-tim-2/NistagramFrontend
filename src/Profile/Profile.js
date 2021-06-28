@@ -22,9 +22,17 @@ class Profile extends Component {
         const { match: { params } } = this.props;
         let user_id = params.user_id
 
-        const self_profile = JSON.parse(localStorage.getItem('identity')).id == user_id
         const logged_in = !(!localStorage.getItem('identity'))
-        const user = (await userService.get(user_id)).data
+        const self_profile = logged_in?JSON.parse(localStorage.getItem('identity')).id == user_id:false
+        let user = null;
+        try {
+            user = (await userService.get(user_id)).data
+        } catch (error) {
+            this.setState({
+                user,
+            });
+            return;
+        }
         let follow_state = {state: 'DNE'}
 
         try {
@@ -40,7 +48,6 @@ class Profile extends Component {
                 self_profile
             });
         }).catch(err => {
-            debugger;
             this.setState({
                 user,
                 posts: err.response.status==404?[]:null, 
@@ -48,7 +55,6 @@ class Profile extends Component {
                 follow_state,
                 self_profile
             });
-
         })
     }
 
@@ -75,6 +81,15 @@ class Profile extends Component {
     }
 
 
+    async block() {
+        let block_state = {'blocked': false};
+        try {
+            block_state = (await userService.block(this.state.user.id)).data
+            alert(block_state.blocked);
+            this.props.history.push('/')
+        } catch (error) { }
+    }
+
 
     render() {
         const { posts, user } = this.state;
@@ -82,6 +97,12 @@ class Profile extends Component {
         return (
             <div className="container">
                 <div className="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-12 row my-4">
+                    {user === null && (
+                        <p className="text-center">User profile not found!</p>
+                    )}
+                    {user === undefined && (
+                        <p className="text-center">User profile not found!</p>
+                    )}
                     {user && (
                         <div className="row">
                             <div className="w-200">
@@ -98,14 +119,13 @@ class Profile extends Component {
                                     
                                     <div className="col-10 offset-1">
                                         <div className="col-12 btn btn-warning btnh my-1 disabled"> Follow request sent </div>
-                                        <div className="col-12 btn btn-danger btnh my-1"> Block </div>
                                     </div>
                                 )}
 
                                 {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "DNE" && (
                                     <div className="col-10 offset-1">
                                         <div className="col-12 btn btn-primary btnh my-1" onClick={() => this.follow()}> Follow </div>
-                                        <div className="col-12 btn btn-danger btnh my-1"> Block </div>
+                                        <div className="col-12 btn btn-danger btnh my-1" onClick={() => this.block()}> Block </div>
                                     </div>
                                     
                                 )}
