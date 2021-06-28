@@ -23,6 +23,10 @@ let userService = {
         let url = `${api}user/api/block`;
         return axios.post(url, {dst: id}, bearer());
     },
+    mute: function(id) {
+        let url = `${api}user/api/follow/mute/${id}`;
+        return axios.get(url, bearer());
+    },
     login: async function (username, password) {
         let url = `${api}user/api/login`;
         try {

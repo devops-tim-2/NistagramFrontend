@@ -90,6 +90,18 @@ class Profile extends Component {
         } catch (error) { }
     }
 
+    async mute() {
+        let follow_state = this.state.follow_state;
+        let mute_state = {'muted': follow_state.mute};
+        try {
+            mute_state = (await userService.mute(this.state.user.id)).data
+            alert(mute_state.muted);
+        } catch (error) { }
+
+        follow_state.mute = mute_state.muted;
+        this.setState({follow_state})
+
+    }
 
     render() {
         const { posts, user } = this.state;
@@ -110,7 +122,7 @@ class Profile extends Component {
 
                                 {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "ACCEPTED" && (
                                     <div className="col-10 offset-1">
-                                        <div className="col-12 btn btn-warning btnh my-1"> Mute </div>
+                                        <div className={`col-12 btn ${this.state.follow_state.mute?'btn-success':'btn-warning'} btnh my-1`} onClick={() => this.mute()}> {this.state.follow_state.mute?'Unmute':'Mute'} </div>
                                         <div className="col-12 btn btn-danger btnh my-1"> Unfollow </div>
                                     </div>
                                 )}
