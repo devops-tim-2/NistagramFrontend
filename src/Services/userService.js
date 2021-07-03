@@ -52,6 +52,18 @@ let userService = {
         let url = `${api}user/api/register`;
         return axios.post(url, user_object);
     },
+    update: function (user_object) {
+        if (!localStorage.getItem('identity')) return;
+        let url = `${api}user/api/${JSON.parse(localStorage.getItem('identity')).id}`;
+        return axios.put(url, user_object, bearer());
+    },
+    updateIdentity: async function() {
+        if (!localStorage.getItem('identity')) return;
+        let identity = JSON.parse(localStorage.getItem('identity'))
+        let url = `${api}user/api/${identity.id}`;
+        let data = await axios.get(url, bearer());
+        localStorage.setItem('identity', JSON.stringify(data.data));
+    },
     onChange: function (v) {}
 };
 

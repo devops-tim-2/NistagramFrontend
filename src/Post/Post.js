@@ -33,7 +33,6 @@ class Post extends Component {
           }
         }
     let post = response.data
-    debugger;
     this.setState({
       post,
       commentText: '',
@@ -55,19 +54,22 @@ class Post extends Component {
   commentotttt() {
     postService.comment(this.state.post.id, this.state.commentText).then(async () => {
 
-        let response = await postService.get_by_id(this.props.post_id);
-        let users = {}
-            for (let cmnti in response.data.comments) {
-              let cmnt = response.data.comments[cmnti]
-              if (!users[cmnt.user_id]) {
-                let user = (await userService.get(cmnt.user_id)).data;
-                users[cmnt.user_id] = user;
-                cmnt.username = user.username;
-              } else {
-                cmnt.username = users[cmnt.user_id].username;
-              }
+      let response = await postService.get_by_id(this.props.post_id);
+      let users = {}
+      let owner = (await userService.get(response.data.user_id)).data;
+      users[response.data.user_id] = owner;
+      response.data.owner = {username: owner.username, profile_image_link: owner.profile_image_link};
+          for (let cmnti in response.data.comments) {
+            let cmnt = response.data.comments[cmnti]
+            if (!users[cmnt.user_id]) {
+              let user = (await userService.get(cmnt.user_id)).data;
+              users[cmnt.user_id] = user;
+              cmnt.username = user.username;
+            } else {
+              cmnt.username = users[cmnt.user_id].username;
             }
-        let post = response.data
+          }
+      let post = response.data
         this.setState({
           post,
           commentText: '',
@@ -115,7 +117,7 @@ class Post extends Component {
             }
             {localStorage.getItem('identity') && (
               <div className="col-12 px-4 py-1 mt-3">
-              <Link class="" to="/xx">
+              <Link class="" to={`/profile/${JSON.parse(localStorage.getItem('identity')).id}`}>
                 <img className="round wh-30 mx-2" src={JSON.parse(localStorage.getItem('identity')).profile_image_link || 'https://www.milton.edu/wp-content/uploads/2019/11/avatar-placeholder-250x300.jpg'}></img>
               </Link>
                 <FormControl

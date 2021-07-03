@@ -151,7 +151,7 @@ class Profile extends Component {
                                     <div className="col-10 offset-1">
                                         <Link className="col-12 btn btn-success btnh my-1" to='/post'> Add post </Link>
                                         <div className="col-12 btn btn-primary btnh my-1"> Follow requests </div>
-                                        <div className="col-12 btn btn-primary btnh my-1"> Edit profile </div>
+                                        <Link className="col-12 btn btn-primary btnh my-1" to='/update'> Edit profile </Link>
                                         <div className="col-12 btn btn-danger btnh my-1" onClick={() => this.logout()}> Logout </div>
                                     </div>
                                 )}
