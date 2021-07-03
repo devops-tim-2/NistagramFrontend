@@ -81,6 +81,11 @@ class Profile extends Component {
     }
 
 
+    logout() {
+        userService.logout();
+        window.location.href = '/login'
+    }
+
     async block() {
         let block_state = {'blocked': false};
         try {
@@ -144,10 +149,10 @@ class Profile extends Component {
 
                                 {this.state.logged_in && this.state.self_profile && (
                                     <div className="col-10 offset-1">
-                                        <div className="col-12 btn btn-success btnh my-1"> Add post </div>
+                                        <Link className="col-12 btn btn-success btnh my-1" to='/post'> Add post </Link>
                                         <div className="col-12 btn btn-primary btnh my-1"> Follow requests </div>
                                         <div className="col-12 btn btn-primary btnh my-1"> Edit profile </div>
-                                        <div className="col-12 btn btn-danger btnh my-1"> Logout </div>
+                                        <div className="col-12 btn btn-danger btnh my-1" onClick={() => this.logout()}> Logout </div>
                                     </div>
                                 )}
 

@@ -21,6 +21,10 @@ let postService = {
         return axios.get(url, bearer());
 
     },
+    comment: function (p_id, ct) {
+        let url = `${api}post/api/comment/${p_id}`;
+        return axios.post(url, {text: ct}, bearer());
+    }
 };
 
 export default postService;

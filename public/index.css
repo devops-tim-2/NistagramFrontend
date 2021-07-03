@@ -27,6 +27,11 @@ height: 30px;
 object-fit: cover;
 }
 
+
+.w-100100 {
+  width: calc(100% - 100px) !important;
+}
+
 .nounderline {
 text-decoration: none !important;
 }
@@ -144,6 +149,8 @@ cursor: pointer;
 .w-100-200 {
   width: calc(100% - 130px);
 }
+
+
 .w-200 {
   width: 100px !important;
   margin-right: 25px;
