@@ -24,6 +24,14 @@ let postService = {
     comment: function (p_id, ct) {
         let url = `${api}post/api/comment/${p_id}`;
         return axios.post(url, {text: ct}, bearer());
+    },
+    like: function (p_id) {
+        let url = `${api}post/api/like/${p_id}`;
+        return axios.get(url, bearer());
+    },
+    dislike: function (p_id) {
+        let url = `${api}post/api/dislike/${p_id}`;
+        return axios.get(url, bearer());
     }
 };
 

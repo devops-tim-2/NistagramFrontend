@@ -16,7 +16,7 @@ class Post extends Component {
     };
   }
 
-  async componentDidMount() {
+  async refresh_data() {
     let response = await postService.get_by_id(this.props.post_id);
     let users = {}
     let owner = (await userService.get(response.data.user_id)).data;
@@ -39,6 +39,22 @@ class Post extends Component {
     });
   }
 
+  async componentDidMount() {
+    this.refresh_data();
+  }
+
+  async like() {
+    let response_like = await postService.like(this.props.post_id);
+    this.refresh_data();
+
+  }
+  
+  async dislike() {
+    let response_like = await postService.dislike(this.props.post_id);
+    this.refresh_data();
+    
+  }
+
   find_hashtags(description) {
     let words = description.split(' ');
     let mapped = words.map( e => e[0] == '#' ? ( <Link to="/" className="nounderline"> {e} </Link> ) : ( <span> {e} </span> ))
@@ -52,28 +68,8 @@ class Post extends Component {
   setCommentText(value) { this.setState({commentText: value}) }
 
   commentotttt() {
-    postService.comment(this.state.post.id, this.state.commentText).then(async () => {
-
-      let response = await postService.get_by_id(this.props.post_id);
-      let users = {}
-      let owner = (await userService.get(response.data.user_id)).data;
-      users[response.data.user_id] = owner;
-      response.data.owner = {username: owner.username, profile_image_link: owner.profile_image_link};
-          for (let cmnti in response.data.comments) {
-            let cmnt = response.data.comments[cmnti]
-            if (!users[cmnt.user_id]) {
-              let user = (await userService.get(cmnt.user_id)).data;
-              users[cmnt.user_id] = user;
-              cmnt.username = user.username;
-            } else {
-              cmnt.username = users[cmnt.user_id].username;
-            }
-          }
-      let post = response.data
-        this.setState({
-          post,
-          commentText: '',
-        });
+    postService.comment(this.state.post.id, this.state.commentText).then(async () => {  
+      this.refresh_data();
     })
   }
 
@@ -91,8 +87,8 @@ class Post extends Component {
             </div>
             <div className="col-12 px-4 py-3 d-flex justify-content-between border-bottom border-light">
                 <div>
-                    <i class="mx-2 text-dark far fa-thumbs-up fa-2x like-hover cursor-pointer"></i>
-                    <i class="mx-2 text-dark far fa-thumbs-down fa-2x dislike-hover cursor-pointer"></i>
+                    <i class={`mx-2 ${post.liked?'text-info fas':'text-dark far'} fa-thumbs-up fa-2x like-hover cursor-pointer`} onClick={() => this.like()}></i>
+                    <i class={`mx-2 ${post.disliked?'text-danger fas':'text-dark far'} fa-thumbs-down fa-2x dislike-hover cursor-pointer`} onClick={() => this.dislike()}></i>
                 </div>
                 <div>
                     <i class="mx-2 text-dark far fa-bookmark fa-2x bookmark-hover cursor-pointer"></i>

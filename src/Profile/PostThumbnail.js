@@ -26,10 +26,10 @@ class PostThumbnail extends Component {
             <Link to={`/post/${post.id}`} className="col-lg-4 col-md-4 col-6 m-0 p-0 thumbnail cursor-pointer">
                 <img className="post-image-thumbnail" src={post.image_url}></img>
                 <p class="img__description text-light noselect">
-                    <span class="mx-2 far fa-thumbs-up"> X </span>
+                    <span class="mx-2 far fa-thumbs-up"> {post.likes} </span>
                     &nbsp;
                     &nbsp;
-                    <span class="mx-2 far fa-comment"> X </span>
+                    <span class="mx-2 far fa-comment"> {post.comments} </span>
                 </p>
             </Link>
         )
