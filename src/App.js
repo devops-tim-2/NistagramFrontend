@@ -9,6 +9,7 @@ import PostPage from './Post/PostPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Requests from './Profile/Requests';
+import BottomBar from './BottomBar/BottomBar';
 import Profile from './Profile/Profile';
 
 
@@ -27,6 +28,7 @@ class App extends Component {
         <Route exact path='/requests' component={Requests}/>
         <ToastContainer position="bottom-center" autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
         
+        <BottomBar></BottomBar>
       </div>
     );
   }
