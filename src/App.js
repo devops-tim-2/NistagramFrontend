@@ -12,6 +12,7 @@ import Requests from './Profile/Requests';
 import BottomBar from './BottomBar/BottomBar';
 import Profile from './Profile/Profile';
 import Update from './Register/Update';
+import Favorites from './Profile/Favorites';
 
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
         <Route exact path='/profile/:user_id' component={Profile}/>
         <Route exact path='/post/:post_id' component={PostPage}/>
         <Route exact path='/requests' component={Requests}/>
+        <Route exact path='/favorites' component={Favorites}/>
         <ToastContainer position="bottom-center" autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
         
         <BottomBar></BottomBar>

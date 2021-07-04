@@ -210,6 +210,13 @@ height: 33px;
 line-height: 33px;
 }
 
+.dammimg {
+  height: 33px;
+  width: 33px;
+  object-fit: cover;
+  object-position: center center;
+}
+
 .fixed-bottom{ 
 padding: 0 !important;
 }

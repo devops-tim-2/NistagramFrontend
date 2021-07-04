@@ -32,6 +32,14 @@ let postService = {
     dislike: function (p_id) {
         let url = `${api}post/api/dislike/${p_id}`;
         return axios.get(url, bearer());
+    },
+    favorite: function (p_id) {
+        let url = `${api}post/api/favorite/${p_id}`;
+        return axios.get(url, bearer());
+    },
+    get_favorites: function() {
+        let url = `${api}post/api/favorite`;
+        return axios.get(url, bearer());
     }
 };
 

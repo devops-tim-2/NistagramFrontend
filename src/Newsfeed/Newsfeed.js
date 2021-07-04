@@ -45,7 +45,7 @@ class Newsfeed extends Component {
         }
 
         const { posts } = this.state;
-        if (!posts || posts.length == 0) return <p>Loading posts...</p>;
+        if (!posts || posts.length === 0) return <p>Loading posts...</p>;
         return (
             <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-12">
                 {posts.map(post => (

@@ -21,15 +21,15 @@ class PostThumbnail extends Component {
 
     render() {
         const { post } = this.state;
-        if (post === null) return <p>Loading post ...</p>;
+        if (!post) return <p>Loading post ...</p>;
         return (
             <Link to={`/post/${post.id}`} className="col-lg-4 col-md-4 col-6 m-0 p-0 thumbnail cursor-pointer">
                 <img className="post-image-thumbnail" src={post.image_url}></img>
-                <p class="img__description text-light noselect">
-                    <span class="mx-2 far fa-thumbs-up"> {post.likes} </span>
+                <p className="img__description text-light noselect">
+                    <span className="mx-2 far fa-thumbs-up"> {post.likes} </span>
                     &nbsp;
                     &nbsp;
-                    <span class="mx-2 far fa-comment"> {post.comments} </span>
+                    <span className="mx-2 far fa-comment"> {post.comments} </span>
                 </p>
             </Link>
         )

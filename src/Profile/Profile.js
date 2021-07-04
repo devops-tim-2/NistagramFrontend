@@ -19,6 +19,7 @@ class Profile extends Component {
     }
 
     async componentDidMount() {
+        let x = await postService.get_favorites();
         const { match: { params } } = this.props;
         let user_id = params.user_id
 
@@ -90,7 +91,6 @@ class Profile extends Component {
         let block_state = {'blocked': false};
         try {
             block_state = (await userService.block(this.state.user.id)).data
-            alert(block_state.blocked);
             this.props.history.push('/')
         } catch (error) { }
     }
@@ -100,7 +100,6 @@ class Profile extends Component {
         let mute_state = {'muted': follow_state.mute};
         try {
             mute_state = (await userService.mute(this.state.user.id)).data
-            alert(mute_state.muted);
         } catch (error) { }
 
         follow_state.mute = mute_state.muted;
@@ -123,7 +122,7 @@ class Profile extends Component {
                     {user && (
                         <div className="row">
                             <div className="w-200">
-                                <img src={user.profile_image_link} class="profile-pic round mb-4 border"></img>
+                                <img src={user.profile_image_link} className="profile-pic round mb-4 border"></img>
 
                                 {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "ACCEPTED" && (
                                     <div className="col-10 offset-1">
