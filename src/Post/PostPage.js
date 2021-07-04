@@ -21,7 +21,7 @@ class PostPage extends Component {
 
   render() {
     const { post_id } = this.state;
-    if (post_id === null) return <p>Loading post ...</p>;
+    if (!post_id) return <p>Loading post ...</p>;
     return (
         <div className="col-8 offset-2 my-5">
             <Post post_id={this.state.post_id}></Post>

@@ -50,14 +50,19 @@ class Post extends Component {
   }
   
   async dislike() {
-    let response_like = await postService.dislike(this.props.post_id);
+    let response_dislike = await postService.dislike(this.props.post_id);
     this.refresh_data();
     
   }
 
+  async favorite() {
+    let response_favorite = await postService.favorite(this.props.post_id);
+    this.refresh_data();
+  }
+
   find_hashtags(description) {
     let words = description.split(' ');
-    let mapped = words.map( e => e[0] == '#' ? ( <Link to="/" className="nounderline"> {e} </Link> ) : ( <span> {e} </span> ))
+    let mapped = words.map( e => e[0] === '#' ? ( <Link to="/" className="nounderline"> {e} </Link> ) : ( <span> {e} </span> ))
     return mapped
   }
 
@@ -75,23 +80,23 @@ class Post extends Component {
 
   render() {
     const { post } = this.state;
-    if (post === null) return <p>Loading post...</p>;
+    if (!post) return <p>Loading post...</p>;
     return (
         <div className="col-12 border border-light pb-4">
             <div className="col-12 px-4 py-3">
                 <img className="round wh-30 mx-2" src={post.owner.profile_image_link}></img>
-                <Link class="mx-2 nounderline bold" to={`/profile/${post.user_id}`}>{post.owner.username}</Link>
+                <Link className="mx-2 nounderline bold" to={`/profile/${post.user_id}`}>{post.owner.username}</Link>
             </div>
             <div className="col-12">
                 <img className="post-image" src={post.image_url}></img>
             </div>
             <div className="col-12 px-4 py-3 d-flex justify-content-between border-bottom border-light">
                 <div>
-                    <i class={`mx-2 ${post.liked?'text-info fas':'text-dark far'} fa-thumbs-up fa-2x like-hover cursor-pointer`} onClick={() => this.like()}></i>
-                    <i class={`mx-2 ${post.disliked?'text-danger fas':'text-dark far'} fa-thumbs-down fa-2x dislike-hover cursor-pointer`} onClick={() => this.dislike()}></i>
+                    <i className={`mx-2 ${post.liked?'text-info fas':'text-dark far'} fa-thumbs-up fa-2x like-hover cursor-pointer`} onClick={() => this.like()}></i>
+                    <i className={`mx-2 ${post.disliked?'text-danger fas':'text-dark far'} fa-thumbs-down fa-2x dislike-hover cursor-pointer`} onClick={() => this.dislike()}></i>
                 </div>
                 <div>
-                    <i class="mx-2 text-dark far fa-bookmark fa-2x bookmark-hover cursor-pointer"></i>
+                    <i className={`mx-2 ${post.favorited?'text-success fas':'text-dark far'} fa-bookmark fa-2x bookmark-hover cursor-pointer`} onClick={() => this.favorite()}></i>
                 </div>
             </div>
             <div className="col-12 px-4 py-1">
@@ -99,21 +104,21 @@ class Post extends Component {
                 <div>{post.dislikes} dislikes</div>
             </div>
             <div className="col-12 px-4 my-3">
-              <Link class="nounderline bold" to={`/profile/${post.user_id}`}>{post.owner.username}</Link>
-                <span class="mx-2">{this.find_hashtags(post.description)}</span>
+              <Link className="nounderline bold" to={`/profile/${post.user_id}`}>{post.owner.username}</Link>
+                <span className="mx-2">{this.find_hashtags(post.description)}</span>
             </div>
             { 
               post.comments && post.comments.length > 0 && post.comments.map(comment => (
                 
                 <div className="col-12 px-4">
-                  <Link class="nounderline bold" to={`/profile/${comment.user_id}`}>{comment.username}</Link>
-                  <span class="mx-2">{this.find_hashtags(comment.text)}</span>
+                  <Link className="nounderline bold" to={`/profile/${comment.user_id}`}>{comment.username}</Link>
+                  <span className="mx-2">{this.find_hashtags(comment.text)}</span>
                 </div>
               ))
             }
             {localStorage.getItem('identity') && (
               <div className="col-12 px-4 py-1 mt-3">
-              <Link class="" to={`/profile/${JSON.parse(localStorage.getItem('identity')).id}`}>
+              <Link className="" to={`/profile/${JSON.parse(localStorage.getItem('identity')).id}`}>
                 <img className="round wh-30 mx-2" src={JSON.parse(localStorage.getItem('identity')).profile_image_link || 'https://www.milton.edu/wp-content/uploads/2019/11/avatar-placeholder-250x300.jpg'}></img>
               </Link>
                 <FormControl
@@ -124,7 +129,7 @@ class Post extends Component {
                   className="d-inline-block w-100100"
               />
               <span>
-                <i class="mx-2 text-dark far fa-comment fa-2x bookmark-hover cursor-pointer" onClick={() => this.commentotttt()}></i>
+                <i className="mx-2 text-dark far fa-comment fa-2x bookmark-hover cursor-pointer" onClick={() => this.commentotttt()}></i>
               </span>
             </div>
             )}

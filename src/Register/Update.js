@@ -68,7 +68,7 @@ export default function Update() {
       'taggable': taggable === 'true'
     }
 
-    if (user_object.interests == '') {
+    if (user_object.interests === '') {
         delete user_object.interests
     }
 
@@ -90,7 +90,7 @@ export default function Update() {
   }
 
   function image_changed(event) {
-    if (event && event.target && event.target.files && event.target.files.length==1) {
+    if (event && event.target && event.target.files && event.target.files.length===1) {
       let file = event.target.files[0];
       let req = new XMLHttpRequest();
       let formData = new FormData();
