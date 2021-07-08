@@ -62,7 +62,7 @@ class Post extends Component {
 
   find_hashtags(description) {
     let words = description.split(' ');
-    let mapped = words.map( e => e[0] === '#' ? ( <Link to="/" className="nounderline"> {e} </Link> ) : ( <span> {e} </span> ))
+    let mapped = words.map( e => e[0] === '#' ? ( <Link to={`/tag/${e.substr(1)}`} className="nounderline"> {e} </Link> ) : ( <span> {e} </span> ))
     return mapped
   }
 
