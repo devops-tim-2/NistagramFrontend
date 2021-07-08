@@ -7,6 +7,7 @@ import Login from './Login/Login'
 import AddPost from './Post/AddPost';
 import AddCampaign from './Campaign/AddCampaign';
 import PostPage from './Post/PostPage';
+import CampaignPage from './Campaign/CampaignPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Requests from './Profile/Requests';
@@ -30,6 +31,7 @@ class App extends Component {
         <Route exact path='/campaign' component={AddCampaign}/>
         <Route exact path='/profile/:user_id' component={Profile}/>
         <Route exact path='/post/:post_id' component={PostPage}/>
+        <Route exact path='/campaign/:campaign_id' component={CampaignPage}/>
         <Route exact path='/requests' component={Requests}/>
         <Route exact path='/favorites' component={Favorites}/>
         <ToastContainer position="bottom-center" autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />

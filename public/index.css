@@ -2,6 +2,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 100px;
 }
 
 code {
@@ -224,4 +225,8 @@ padding: 0 !important;
 .dam {
 border-radius: 0;
 border: 0;
+}
+
+.xx:hover {
+  background-color: #4582eccc !important;
 }

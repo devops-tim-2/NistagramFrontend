@@ -5,7 +5,9 @@ import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import userService from '../Services/userService'
 import postService from '../Services/postService'
+import campaignService from '../Services/campaignService'
 import PostThumbnail from '../Profile/PostThumbnail'
+import CampaignThumbnail from '../Profile/CampaignThumbnail'
 
 class Profile extends Component {
     constructor(props) {
@@ -13,6 +15,7 @@ class Profile extends Component {
         this.state = {
             user: undefined,
             posts: undefined,
+            campaigns: undefined,
             follow_state: undefined,
             self_profile: false,
         };
@@ -40,11 +43,16 @@ class Profile extends Component {
             follow_state = (await userService.get_follow(user_id)).data
         } catch (error) { }
 
+        let campaigns = {data: []}
+        if (user.role == 'agent') {
+            campaigns = await campaignService.get_users_campaigns(user.id);
+        }
         postService.get_users_posts(user.id).then(posts => {
             this.setState({
                 user,
                 logged_in,
                 posts: posts.data, 
+                campaigns: campaigns.data,
                 follow_state,
                 self_profile
             });
@@ -52,6 +60,7 @@ class Profile extends Component {
             this.setState({
                 user,
                 posts: err.response.status==404?[]:null, 
+                campaigns: campaigns.data,
                 logged_in,
                 follow_state,
                 self_profile
@@ -108,7 +117,7 @@ class Profile extends Component {
     }
 
     render() {
-        const { posts, user } = this.state;
+        const { posts, user, campaigns } = this.state;
 
         return (
             <div className="container">
@@ -178,6 +187,20 @@ class Profile extends Component {
                         </div>
                     )}
                 </div>
+                { user && user.role == 'agent' && (
+                    <div className="col-12">
+                        <hr className="col-6 offset-3"></hr>
+                        <div className="col-lg-10 offset-lg-1 col-md-10 offset-md-1 col-12 row my-4">
+                            {campaigns && campaigns.length > 0 && campaigns.map((campaign,i) => (
+                                <CampaignThumbnail campaign={campaign}></CampaignThumbnail>
+                            ))}
+
+                            { campaigns && campaigns.length == 0 && (
+                                <p className="text-center">User profile doesn't have any campaigns yet.</p>
+                            ) }
+                        </div>
+                    </div>
+                )}
                 <hr className="col-6 offset-3"></hr>
                 <div className="col-lg-10 offset-lg-1 col-md-10 offset-md-1 col-12 row my-4">
                     {posts && posts.length > 0 && posts.map((post,i) => (
