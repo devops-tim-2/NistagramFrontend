@@ -25,5 +25,3 @@ jobs:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
           prerelease: false
-      - name: Build and publish image
-        run: ./release.sh ${{ secrets.DOCKERHUB_USERNAME }} ${{ secrets.DOCKERHUB_PASSWORD }} ${{ steps.tag_version.outputs.new_tag }}
