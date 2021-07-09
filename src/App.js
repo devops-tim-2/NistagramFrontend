@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Requests from './Profile/Requests';
 import BottomBar from './BottomBar/BottomBar';
+import Tag from './Newsfeed/Tag';
 import Profile from './Profile/Profile';
 import Update from './Register/Update';
 import Favorites from './Profile/Favorites';
@@ -32,6 +33,7 @@ class App extends Component {
         <Route exact path='/profile/:user_id' component={Profile}/>
         <Route exact path='/post/:post_id' component={PostPage}/>
         <Route exact path='/campaign/:campaign_id' component={CampaignPage}/>
+        <Route exact path='/tag/:tag' component={Tag}/>
         <Route exact path='/requests' component={Requests}/>
         <Route exact path='/favorites' component={Favorites}/>
         <ToastContainer position="bottom-center" autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
