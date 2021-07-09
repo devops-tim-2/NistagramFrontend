@@ -22,7 +22,11 @@ export default function AddPost() {
   }
 
   function image_changed(event) {
+<<<<<<< HEAD
+    if (event && event.target && event.target.files && event.target.files.length===1) {
+=======
     if (event && event.target && event.target.files && event.target.files.length==1) {
+>>>>>>> main
       let file = event.target.files[0];
       mediaService.upload_image(file, (image_link) => {
         document.getElementById('img-preview').setAttribute('src', image_link)

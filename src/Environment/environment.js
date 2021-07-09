@@ -1,8 +1,18 @@
 module.exports.api = 'http://localhost:8000/';
-module.exports.bearer = () => { return {
-    headers: { Authorization: `Bearer ${localStorage.getItem('user-token')}` }
-}}
-
+module.exports.bearer = () => { 
+    if(localStorage.getItem('user-token')){
+        return {headers: { Authorization: `Bearer ${localStorage.getItem('user-token')}`} }
+    } else {
+        return {}
+    }
+}
+module.exports.adminbearer = () => { 
+    if(localStorage.getItem('user-token')){
+        return {headers: { Authorization: `Bearer ${localStorage.getItem('admin-user-token')}`} }
+    } else {
+        return {}
+    }
+}
 
 module.exports.dummy_posts = [{
     username: 'nenadmisic',

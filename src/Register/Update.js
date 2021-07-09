@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, FormGroup, FormControl } from "react-bootstrap";
 import userService from '../Services/userService';
 import { useHistory } from "react-router-dom";
@@ -10,11 +10,9 @@ import Select from 'react-select'
 import {Link} from 'react-router-dom';
 import { api } from "../Environment/environment";
 
-export default function Register() {
+export default function Update() {
   let history = useHistory()
   const [username, set_username] = useState("");
-  const [password, set_password] = useState("");
-  const [role, set_role] = useState("")
   const [age, set_age] = useState("")
   const [sex, set_sex] = useState("")
   const [region, set_region] = useState("")
@@ -22,23 +20,43 @@ export default function Register() {
   const [bio, set_bio] = useState("")
   const [website, set_website] = useState("")
   const [phone, set_phone] = useState("")
-  const [mail, set_mail] = useState("")
   const [profile_image_link, set_profile_image_link] = useState("")
   const [publicc, set_publicc] = useState("")
   const [taggable, set_taggable] = useState("")
+
+
+  const [loading, setLoading] = useState(true);
   
+
+  useEffect(() => {
+    if(!loading)
+        return
+    setLoading(false);
+
+    let user = JSON.parse(localStorage.getItem('identity'))
+    set_username(user.username)
+    set_age(user.age)
+    set_sex(user.sex)
+    set_region(user.region)
+    set_bio(user.bio)
+    set_website(user.website)
+    set_phone(user.phone)
+    set_publicc(user.public?'publicc':'private')
+    set_taggable(user.taggable?'true':'false')
+
+  });
+
+
   const all_interests = ['Writing', 'Gardening', 'Calligraphy', 'Puzzling', 'Reading', 'Cooking ', 'Running', 'Rock Climbing', 'Swimming', 'Yoga', 'Hiking', 'Brew Your Own Beer', 'Beekeeping', 'Stand-Up Comedy and Improv', 'Pickling', 'Mixology', 'Start a Collection', 'Painting', 'Scrapbooking', 'Knitting', 'Pottery', 'Sewing', 'Embroidery', 'Make Your Own Candles', 'Meditation', 'Traveling', 'Learn an Instrument', 'Photography', 'Study New Languages', 'Volunteer']
   
   function validateForm() {
-    return username.length > 0 && password.length > 0;
+    return username.length > 0
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     let user_object = {
       'username': username,
-      'password': password,
-      'role': role,
       'age': age,
       'sex': sex,
       'region': region,
@@ -46,14 +64,19 @@ export default function Register() {
       'bio': bio,
       'website': website,
       'phone': phone,
-      'mail': mail,
-      'profile_image_link': profile_image_link,
       'public': publicc === 'publicc',
       'taggable': taggable === 'true'
     }
 
-    userService.register(user_object).then((response) => {
-      toast.success("Successfully registered.")
+    if (user_object.interests === '') {
+        delete user_object.interests
+    }
+
+    if(profile_image_link) user_object.profile_image_link = profile_image_link;
+
+    userService.update(user_object).then((response) => {
+        userService.updateIdentity();
+      toast.success("Successfully updated.")
     }).catch(error => {
       toast.error(JSON.stringify(error.message, null, 2))
     })
@@ -67,7 +90,7 @@ export default function Register() {
   }
 
   function image_changed(event) {
-    if (event && event.target && event.target.files && event.target.files.length==1) {
+    if (event && event.target && event.target.files && event.target.files.length===1) {
       let file = event.target.files[0];
       let req = new XMLHttpRequest();
       let formData = new FormData();
@@ -110,23 +133,6 @@ export default function Register() {
             onChange={e => set_username(e.target.value)}
           />
         </FormGroup>
-        <FormGroup controlId="password" bssize="large" className="my-4">
-          <label>Password</label>
-          <FormControl
-            value={password}
-            onChange={e => set_password(e.target.value)}
-            type="password"
-          />
-        </FormGroup>
-
-        <FormGroup controlId="role" bssize="large" className="my-4" id="roleSelect" onChange={e => set_role(e.target.value)}>
-            <label>Role</label>
-            <FormControl as="select">
-                <option value=''></option>
-                <option value='user'>User</option>
-                <option value='agent'>Agent</option>
-            </FormControl>
-        </FormGroup>
 
         <FormGroup controlId="age" bssize="large" className="my-4">
             <label>Age</label>
@@ -139,7 +145,7 @@ export default function Register() {
 
         <FormGroup controlId="sex" bssize="large" className="my-4" id="sexSelect" onChange={e => set_sex(e.target.value)}>
             <label>Sex</label>
-            <FormControl as="select">
+            <FormControl as="select"  value={sex}>
                 <option value=''></option>
                 <option value='m'>Male</option>
                 <option value='f'>Female</option>
@@ -149,7 +155,7 @@ export default function Register() {
 
         <FormGroup controlId="region" bssize="large" className="my-4" id="regionSelect" onChange={e => set_region(e.target.value)}>
             <label>Region</label>
-            <FormControl as="select">
+            <FormControl as="select" value={region}>
                 <option value=''></option>
                 <option value='eu'>Europe</option>
                 <option value='na'>North America</option>
@@ -161,9 +167,9 @@ export default function Register() {
         </FormGroup>
 
         <div className="form-group">
-            <label htmlFor="interests">Interests</label>
+            <label htmlFor="interests" >Interests</label>
             <br></br>
-            <Select
+            <Select 
               isMulti
               name="interests"
               options={all_interests.map((interest)=> { return {value: interest.toLowerCase(), label: interest}})}
@@ -200,15 +206,6 @@ export default function Register() {
                 type="text"
             />
         </FormGroup>
-
-        <FormGroup controlId="mail" bssize="large" className="my-4">
-            <label>E-mail</label>
-            <FormControl
-                value={mail}
-                onChange={e => set_mail(e.target.value)}
-                type="text"
-            />
-        </FormGroup>
         
         <FormGroup controlId="image" bssize="large" className="my-4">
           <label className="form-label" for="formImage">Image</label>
@@ -219,9 +216,9 @@ export default function Register() {
         <img className="img-preview col-6 offset-3" src="" id="img-preview"></img>
 
 
-        <FormGroup controlId="publicc" bssize="large" className="my-4" id="publiccSelect" onChange={e => set_publicc(e.target.value)}>
+        <FormGroup controlId="publicc"  bssize="large" className="my-4" id="publiccSelect" onChange={e => set_publicc(e.target.value)}>
             <label>Account type</label>
-            <FormControl as="select">
+            <FormControl as="select" value={publicc} >
                 <option value=''></option>
                 <option value='publicc'>Public</option>
                 <option value='private'>Private</option>
@@ -229,7 +226,7 @@ export default function Register() {
         </FormGroup>
         <FormGroup controlId="taggable" bssize="large" className="my-4" id="taggableSelect" onChange={e => set_taggable(e.target.value)}>
             <label>Tags</label>
-            <FormControl as="select">
+            <FormControl as="select" value={taggable} >
                 <option value=''></option>
                 <option value='true'>Others can tag me on their posts</option>
                 <option value='false'>Others cannot tag me on their posts</option>
@@ -237,12 +234,11 @@ export default function Register() {
         </FormGroup>
 
         <Button className="my-2 w-100" block bssize="large" disabled={!validateForm()} type="submit">
-          Create account
+          Update account info
         </Button>
 
         <br></br>
         <br></br>
-        <Link to="/login" className="my-5">Already have an account?</Link>
       </form>
     </div>
   );

@@ -5,7 +5,9 @@ import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import userService from '../Services/userService'
 import postService from '../Services/postService'
+import campaignService from '../Services/campaignService'
 import PostThumbnail from '../Profile/PostThumbnail'
+import CampaignThumbnail from '../Profile/CampaignThumbnail'
 
 class Profile extends Component {
     constructor(props) {
@@ -13,42 +15,56 @@ class Profile extends Component {
         this.state = {
             user: undefined,
             posts: undefined,
+            campaigns: undefined,
             follow_state: undefined,
             self_profile: false,
         };
     }
 
     async componentDidMount() {
+        let x = await postService.get_favorites();
         const { match: { params } } = this.props;
         let user_id = params.user_id
 
-        const self_profile = JSON.parse(localStorage.getItem('identity')).id == user_id
         const logged_in = !(!localStorage.getItem('identity'))
-        const user = (await userService.get(user_id)).data
+        const self_profile = logged_in?JSON.parse(localStorage.getItem('identity')).id == user_id:false
+        let user = null;
+        try {
+            user = (await userService.get(user_id)).data
+        } catch (error) {
+            this.setState({
+                user,
+            });
+            return;
+        }
         let follow_state = {state: 'DNE'}
 
         try {
             follow_state = (await userService.get_follow(user_id)).data
         } catch (error) { }
 
+        let campaigns = {data: []}
+        if (user.role == 'agent') {
+            campaigns = await campaignService.get_users_campaigns(user.id);
+        }
         postService.get_users_posts(user.id).then(posts => {
             this.setState({
                 user,
                 logged_in,
                 posts: posts.data, 
+                campaigns: campaigns.data,
                 follow_state,
                 self_profile
             });
         }).catch(err => {
-            debugger;
             this.setState({
                 user,
                 posts: err.response.status==404?[]:null, 
+                campaigns: campaigns.data,
                 logged_in,
                 follow_state,
                 self_profile
             });
-
         })
     }
 
@@ -75,21 +91,51 @@ class Profile extends Component {
     }
 
 
+    logout() {
+        userService.logout();
+        window.location.href = '/login'
+    }
+
+    async block() {
+        let block_state = {'blocked': false};
+        try {
+            block_state = (await userService.block(this.state.user.id)).data
+            this.props.history.push('/')
+        } catch (error) { }
+    }
+
+    async mute() {
+        let follow_state = this.state.follow_state;
+        let mute_state = {'muted': follow_state.mute};
+        try {
+            mute_state = (await userService.mute(this.state.user.id)).data
+        } catch (error) { }
+
+        follow_state.mute = mute_state.muted;
+        this.setState({follow_state})
+
+    }
 
     render() {
-        const { posts, user } = this.state;
+        const { posts, user, campaigns } = this.state;
 
         return (
             <div className="container">
                 <div className="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-12 row my-4">
+                    {user === null && (
+                        <p className="text-center">User profile not found!</p>
+                    )}
+                    {user === undefined && (
+                        <p className="text-center">User profile not found!</p>
+                    )}
                     {user && (
                         <div className="row">
                             <div className="w-200">
-                                <img src={user.profile_image_link} class="profile-pic round mb-4 border"></img>
+                                <img src={user.profile_image_link} className="profile-pic round mb-4 border"></img>
 
                                 {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "ACCEPTED" && (
                                     <div className="col-10 offset-1">
-                                        <div className="col-12 btn btn-warning btnh my-1"> Mute </div>
+                                        <div className={`col-12 btn ${this.state.follow_state.mute?'btn-success':'btn-warning'} btnh my-1`} onClick={() => this.mute()}> {this.state.follow_state.mute?'Unmute':'Mute'} </div>
                                         <div className="col-12 btn btn-danger btnh my-1"> Unfollow </div>
                                     </div>
                                 )}
@@ -98,24 +144,23 @@ class Profile extends Component {
                                     
                                     <div className="col-10 offset-1">
                                         <div className="col-12 btn btn-warning btnh my-1 disabled"> Follow request sent </div>
-                                        <div className="col-12 btn btn-danger btnh my-1"> Block </div>
                                     </div>
                                 )}
 
                                 {this.state.logged_in && !this.state.self_profile && this.state.follow_state && this.state.follow_state.state == "DNE" && (
                                     <div className="col-10 offset-1">
                                         <div className="col-12 btn btn-primary btnh my-1" onClick={() => this.follow()}> Follow </div>
-                                        <div className="col-12 btn btn-danger btnh my-1"> Block </div>
+                                        <div className="col-12 btn btn-danger btnh my-1" onClick={() => this.block()}> Block </div>
                                     </div>
                                     
                                 )}
 
                                 {this.state.logged_in && this.state.self_profile && (
                                     <div className="col-10 offset-1">
-                                        <div className="col-12 btn btn-success btnh my-1"> Add post </div>
+                                        <Link className="col-12 btn btn-success btnh my-1" to='/post'> Add post </Link>
                                         <div className="col-12 btn btn-primary btnh my-1"> Follow requests </div>
-                                        <div className="col-12 btn btn-primary btnh my-1"> Edit profile </div>
-                                        <div className="col-12 btn btn-danger btnh my-1"> Logout </div>
+                                        <Link className="col-12 btn btn-primary btnh my-1" to='/update'> Edit profile </Link>
+                                        <div className="col-12 btn btn-danger btnh my-1" onClick={() => this.logout()}> Logout </div>
                                     </div>
                                 )}
 
@@ -142,6 +187,20 @@ class Profile extends Component {
                         </div>
                     )}
                 </div>
+                { user && user.role == 'agent' && (
+                    <div className="col-12">
+                        <hr className="col-6 offset-3"></hr>
+                        <div className="col-lg-10 offset-lg-1 col-md-10 offset-md-1 col-12 row my-4">
+                            {campaigns && campaigns.length > 0 && campaigns.map((campaign,i) => (
+                                <CampaignThumbnail campaign={campaign}></CampaignThumbnail>
+                            ))}
+
+                            { campaigns && campaigns.length == 0 && (
+                                <p className="text-center">User profile doesn't have any campaigns yet.</p>
+                            ) }
+                        </div>
+                    </div>
+                )}
                 <hr className="col-6 offset-3"></hr>
                 <div className="col-lg-10 offset-lg-1 col-md-10 offset-md-1 col-12 row my-4">
                     {posts && posts.length > 0 && posts.map((post,i) => (

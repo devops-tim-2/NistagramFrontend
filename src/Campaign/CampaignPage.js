@@ -1,33 +1,33 @@
 import React, {Component, useState }  from 'react';
 import {Link} from 'react-router-dom';
 import { dummy_posts } from '../Environment/environment';
-import Post from './Post';
+import Campaign from './Campaign';
 
 
-class PostPage extends Component {
+class CampaignPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      post_id: null,
+      campaign_id: null,
     };
   }
 
   async componentDidMount() {
     const { match: { params } } = this.props;
-    let post_id = params.post_id
-    this.setState({post_id})
+    let campaign_id = params.campaign_id
+    this.setState({campaign_id})
   }
 
   render() {
-    const { post_id } = this.state;
-    if (!post_id) return <p>Loading post ...</p>;
+    const { campaign_id } = this.state;
+    if (!campaign_id) return <p>Loading campaign ...</p>;
     return (
         <div className="col-8 offset-2 my-5">
-            <Post post_id={this.state.post_id}></Post>
+            <Campaign campaign_id={this.state.campaign_id}></Campaign>
         </div>
     )
   }
 }
 
-export default PostPage;
+export default CampaignPage;

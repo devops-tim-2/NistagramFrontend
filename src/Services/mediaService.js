@@ -10,7 +10,7 @@ let mediaService = {
 
         req.onload = function () {
             var status = req.status;
-            if (status == 200) {
+            if (status === 200) {
                 cb(`${url}${JSON.parse(req.response).image_path}`)
             } else {
                 alert('failure')
