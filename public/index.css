@@ -41,7 +41,9 @@ text-decoration: none !important;
 font-weight: 600;
 }
 
-
+.danger-hover:hover {
+  color: #f9736f !important;
+}
 .post-image {
 width: 100%;
 object-fit: contain;
