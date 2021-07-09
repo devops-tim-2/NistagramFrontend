@@ -6,7 +6,13 @@ module.exports.bearer = () => {
         return {}
     }
 }
-
+module.exports.adminbearer = () => { 
+    if(localStorage.getItem('user-token')){
+        return {headers: { Authorization: `Bearer ${localStorage.getItem('admin-user-token')}`} }
+    } else {
+        return {}
+    }
+}
 
 module.exports.dummy_posts = [{
     username: 'nenadmisic',

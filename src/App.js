@@ -16,6 +16,9 @@ import Tag from './Newsfeed/Tag';
 import Profile from './Profile/Profile';
 import Update from './Register/Update';
 import Favorites from './Profile/Favorites';
+import AdminLogin from './Admin/Login';
+import AdminRegister from './Admin/Register';
+import Administration from './Admin/Administration';
 
 
 class App extends Component {
@@ -27,6 +30,9 @@ class App extends Component {
         <Route exact path='/' component={Newsfeed}/>
         <Route exact path='/login' component={Login}/>
         <Route exact path='/register' component={Register}/>
+        <Route exact path='/adminlogin' component={AdminLogin}/>
+        <Route exact path='/adminregister' component={AdminRegister}/>
+        <Route exact path='/administration' component={Administration}/>
         <Route exact path='/update' component={Update}/>
         <Route exact path='/post' component={AddPost}/>
         <Route exact path='/campaign' component={AddCampaign}/>

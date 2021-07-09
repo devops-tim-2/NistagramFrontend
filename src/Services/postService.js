@@ -37,6 +37,10 @@ let postService = {
         let url = `${api}post/api/favorite/${p_id}`;
         return axios.get(url, bearer());
     },
+    inapporpriate: function (p_id) {
+        let url = `${api}post/api/inappropriate/${p_id}`;
+        return axios.get(url, bearer());
+    },
     get_favorites: function() {
         let url = `${api}post/api/favorite`;
         return axios.get(url, bearer());

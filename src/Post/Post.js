@@ -59,6 +59,11 @@ class Post extends Component {
     let response_favorite = await postService.favorite(this.props.post_id);
     this.refresh_data();
   }
+  async inappropriate() {
+    let response_inapporpriate = await postService.inapporpriate(this.props.post_id);
+    this.refresh_data();
+  }
+
 
   find_hashtags(description) {
     let words = description.split(' ');
@@ -97,6 +102,8 @@ class Post extends Component {
                 </div>
                 <div>
                     <i className={`mx-2 ${post.favorited?'text-success fas':'text-dark far'} fa-bookmark fa-2x bookmark-hover cursor-pointer`} onClick={() => this.favorite()}></i>
+                    <i className={`mx-2 text-danger far fa-flag fa-2x danger-hover cursor-pointer`} onClick={() => this.inappropriate()}></i>
+                
                 </div>
             </div>
             <div className="col-12 px-4 py-1">
